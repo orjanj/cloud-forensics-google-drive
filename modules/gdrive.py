@@ -7,14 +7,16 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-import sys, json
+import sys
+import json
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata']
 
 
 class GoogleDrive:
-    def __init__(self, credentials_file, token_file):
+    def __init__(
+            self, credentials_file, token_file):
         """ Initialize connection to Google Drive.
         :params credentials_file: Credential file (path)
         """
@@ -23,14 +25,19 @@ class GoogleDrive:
         self.refresh_user_token()
 
 
-    def refresh_user_token(self):
+    def refresh_user_token(
+            self):
         """ Refresh user tokens and store user's access."""
         self.creds = None
         if os.path.exists(self.token_path):
             self.creds = Credentials.from_authorized_user_file(self.token_path, SCOPES)
+
         # If there are no (valid) credentials available, let the user log in.
-        if not self.creds or not self.creds.valid:
-            if self.creds and self.creds.expired and self.creds.refresh_token:
+        if (not self.creds or
+            not self.creds.valid):
+            if (self.creds and 
+                self.creds.expired and
+                self.creds.refresh_token):
                 self.creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
@@ -40,7 +47,8 @@ class GoogleDrive:
             with open(self.token_path, 'w') as token:
                 token.write(self.creds.to_json())
 
-    def connect(self, drive_display_name):
+    def connect(
+            self, drive_display_name):
         try:
             self.service = build('drive', 'v3', credentials=self.creds)
             results = self.service.about().get(fields="*").execute()
@@ -57,7 +65,9 @@ class GoogleDrive:
             # TODO(developer) - Handle errors from drive API.
             print(f'An error occurred: {error}')
 
-    def list_files(self, metadata = None, print_output = False):
+
+    def list_files(
+            self, metadata = None, print_output = False):
         """ List files from Google Drive. """
         if metadata is True:
             results = self.service.files().list(
@@ -68,14 +78,14 @@ class GoogleDrive:
         items = results.get('files', [])
 
         if not items:
-            if print_output is True:
+            if print_output:
                 print('No files found.')
             return
         for item in items:
-            if print_output is True and metadata is True:
+            if (print_output and
+                metadata):
                 print(json.dumps(item))
-            elif metadata is True:
+            elif metadata:
                 return json.dumps(item)
             else:
                 print(f"{item['name']} ({item['id']})")
-
