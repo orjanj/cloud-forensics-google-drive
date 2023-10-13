@@ -89,3 +89,58 @@ class GoogleDrive:
                 return json.dumps(item)
             else:
                 print(f"{item['name']} ({item['id']})")
+
+    def get_start_page_token(
+            self):
+        """ Get start page token. """
+        try:
+            start_page_token = self.service.changes().getStartPageToken().execute()
+        except HttpError as error:
+            start_page_token = None
+        return start_page_token.get('startPageToken')
+
+    def list_changes(
+            self, start_page_token = None):
+        """ Get disk changes. """
+        try:
+            page_token = start_page_token
+
+            changes = []
+            while page_token is not None:
+                response = self.service.changes().list(
+                    pageToken=page_token,
+                    spaces='drive').execute()
+
+                for change in response.get('changes'):
+                    file_changes = {}
+                    file_changes['fileId'] = change.get('fileId')
+                    file_changes['time'] = change.get('time')
+                    file_changes['removed'] = change.get('removed')
+                    file_object = change.get('file')
+                    file_changes['modifiedTime'] = file_object.get('modifiedTime')
+                    file_changes['createdTime'] = file_object.get('createdTime')
+                    file_changes['trash'] = file_object.get('trashed')
+                    file_changes['size'] = file_object.get('size')
+                    file_changes['name'] = file_object.get('name')
+                    file_changes['id'] = file_object.get('id')
+                    file_changes['trashed'] = file_object.get('trashed')
+                    file_changes['explicitlyTrashed'] = file_object.get('explicitlyTrashed')
+                    file_changes['version'] = file_object.get('version')
+                    file_changes['originalFilename'] = file_object.get('originalFilename')
+                    file_changes['trashedTime'] = file_object.get('trashedTime')
+                    file_changes['sha1Checksum'] = file_object.get('sha1Checksum')
+                    file_changes['sha256Checksum'] = file_object.get('sha256Checksum')
+                    changes.append(file_changes)
+
+                if 'newStartPageToken' in response:
+                    # Last page, save this token for the next polling interval
+                    start_page_token = response.get('newStartPageToken')
+                page_token = response.get('nextPageToken')
+
+            json_blob = json.dumps(changes)
+
+        except HttpError as error:
+            print(f"Error occured: {error}")
+            start_page_token = None
+
+        return json_blob
