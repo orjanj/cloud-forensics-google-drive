@@ -84,9 +84,9 @@ class GoogleDrive:
         for item in items:
             if (print_output and
                 metadata):
-                print(json.dumps(item))
+                print(json.dumps(item, indent=2))
             elif metadata:
-                return json.dumps(item)
+                return json.dumps(item, indent=2)
             else:
                 print(f"{item['name']} ({item['id']})")
 
@@ -119,7 +119,7 @@ class GoogleDrive:
                     start_page_token = response.get('newStartPageToken')
                 page_token = response.get('nextPageToken')
 
-            json_blob = json.dumps(changes)
+            json_blob = json.dumps(changes, indent=2)
 
         except HttpError as error:
             print(f"Error occured: {error}")
