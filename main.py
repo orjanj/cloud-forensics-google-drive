@@ -1,4 +1,5 @@
 from modules.gdrive import GoogleDrive
+from modules.file import File
 from dotenv import load_dotenv
 import os
 
@@ -12,8 +13,10 @@ if __name__ == "__main__":
     # Get start page token
     start_page_token = gdrive.get_start_page_token()
 
-    # List files
-    print(gdrive.list_files())
+    # List files and write to file
+    file = File("file_list.json")
+    file.write(gdrive.list_files(metadata = True))
 
     # List changes
-    print(gdrive.list_changes(start_page_token=93))
+    file = File("file_changes.json")
+    file.write(gdrive.list_changes(start_page_token=93))
