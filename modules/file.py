@@ -7,7 +7,7 @@ class File:
         :params output_file_path: Output file path (path)
         """
         timestamp_now = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-        self.output_file_path = f"output/{timestamp_now}_{output_file_path}"
+        self.output_file_path = f"forensics-output/{timestamp_now}_{output_file_path}"
 
     def write(
         self, output):
