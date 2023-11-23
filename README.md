@@ -29,6 +29,8 @@ https://developers.google.com/drive/api/quickstart/python#prerequisites
 pip3 install -r requirements.txt
 ```
 
+6. Copy the [example environment file](./.env.example) to `.env` and change parameters (if you want to use other directories than default)
+
 ## Run the script and fetch the output JSON files
 1. Log in to the given Google Drive account in the preferred web browser.
 
