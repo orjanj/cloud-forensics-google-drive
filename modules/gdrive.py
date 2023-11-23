@@ -1,4 +1,5 @@
-# Reimplementation of code from Google with some changes: https://developers.google.com/drive/api/quickstart/python#recommendations-link
+# Reimplementation of code from Google with minor changes:
+# https://developers.google.com/drive/api/quickstart/python#recommendations-link
 
 from __future__ import print_function
 import os.path
@@ -11,7 +12,11 @@ import sys
 import json
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.appdata']
+SCOPES = [
+    'https://www.googleapis.com/auth/drive.metadata.readonly',
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/drive.appdata'
+]
 
 
 class GoogleDrive:
@@ -19,6 +24,7 @@ class GoogleDrive:
             self, credentials_file, token_file):
         """ Initialize connection to Google Drive.
         :params credentials_file: Credential file (path)
+        :params token_file: Token file (path)
         """
         self.credentials_path = credentials_file
         self.token_path = token_file
@@ -29,7 +35,8 @@ class GoogleDrive:
             self):
         """ Refresh user tokens and store user's access."""
         self.creds = None
-        if os.path.exists(self.token_path):
+        if os.path.exists(
+            self.token_path):
             self.creds = Credentials.from_authorized_user_file(self.token_path, SCOPES)
 
         # If there are no (valid) credentials available, let the user log in.
@@ -48,7 +55,7 @@ class GoogleDrive:
                 token.write(self.creds.to_json())
 
     def connect(
-            self, drive_display_name):
+            self):
         try:
             self.service = build('drive', 'v3', credentials=self.creds)
             results = self.service.about().get(fields="*").execute()
@@ -56,16 +63,9 @@ class GoogleDrive:
             # Verify the display name is correct
             print(f"Connected to Google Drive as {results['user']['displayName']}.")
 
-            # if drive_display_name == results['user']['displayName']:
-            #     pass
-            #     # print("Connected to Google Drive.")
-            # else:
-            #     print(f"Error: Connection error.")
-            #     sys.exit(1)
-
         except HttpError as error:
             # TODO(developer) - Handle errors from drive API.
-            print(f'An error occurred: {error}')
+            print(f"An error occurred: {error}")
 
 
     def list_files(
@@ -81,16 +81,20 @@ class GoogleDrive:
 
         if not items:
             if print_output:
-                print('No files found.')
+                print("No files found.")
             return
+
+        json_blob = ''
+
         for item in items:
             if (print_output and
                 metadata):
                 print(json.dumps(item, indent=2))
             elif metadata:
-                return json.dumps(item, indent=2)
+                json_blob += json.dumps(item, indent=2)
             else:
                 print(f"{item['name']} ({item['id']})")
+        return json_blob
 
     def get_start_page_token(
             self):

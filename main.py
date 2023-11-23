@@ -7,8 +7,8 @@ load_dotenv()
 
 if __name__ == "__main__":
     gdrive = GoogleDrive(os.getenv('CREDENTIALS_FILE'), os.getenv('TOKEN_FILE'))
-    gdrive.connect(os.getenv('DRIVE_DISPLAY_NAME'))
-    # gdrive.list_files(print_output = True, metadata = True)
+    gdrive.connect()
+    # gdrive.list_files(print_output = False, metadata = True)
 
     # Get start page token
     start_page_token = gdrive.get_start_page_token()
@@ -16,6 +16,8 @@ if __name__ == "__main__":
     # List files and write to file
     file = File("file_list.json")
     file.write(gdrive.list_files(metadata = True))
+    # Metadata must be set to print json blob to file
+    # setting this to `False` will only give a file list and file id
 
     # List changes
     file = File("file_changes.json")
