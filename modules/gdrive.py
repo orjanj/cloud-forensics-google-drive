@@ -66,6 +66,7 @@ class GoogleDrive:
         except HttpError as error:
             # TODO(developer) - Handle errors from drive API.
             print(f"An error occurred: {error}")
+            sys.exit(1)
 
 
     def list_files(
