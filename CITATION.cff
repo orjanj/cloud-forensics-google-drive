@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+date-released: 2023-11-23
+title: cloud-forensics-google-drive
+message: Please cite this software using these metadata.
+type: software
+authors:
+  - given-names: Ørjan
+    family-names: Jacobsen
+repository-code: 'https://github.com/orjanj/cloud-forensics-google-drive'
+url: 'https://github.com/orjanj/cloud-forensics-google-drive'
+abstract: >-
+  Simple PoC for cloud forensics (study 
+  project) using the Google Drive API to 
+  retrieve files meta data and file changes, 
+  outputting it to JSON.
+keywords:
+  - python
+  - api
+  - cloud
+  - forensics
+  - gdrive
