@@ -54,12 +54,14 @@ class GoogleDrive:
             results = self.service.about().get(fields="*").execute()
 
             # Verify the display name is correct
-            if drive_display_name == results['user']['displayName']:
-                pass
-                # print("Connected to Google Drive.")
-            else:
-                print(f"Error: Connection error.")
-                sys.exit(1)
+            print(f"Connected to Google Drive as {results['user']['displayName']}.")
+
+            # if drive_display_name == results['user']['displayName']:
+            #     pass
+            #     # print("Connected to Google Drive.")
+            # else:
+            #     print(f"Error: Connection error.")
+            #     sys.exit(1)
 
         except HttpError as error:
             # TODO(developer) - Handle errors from drive API.
